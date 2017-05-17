@@ -12,6 +12,7 @@ from wsgiref import headers
 from bs4 import BeautifulSoup
 import requests
 
+from proxytest import get_image_header, count_time, get_random_IP
 
 
 def IP_Test(IP, URL_test, set_timeout=1)  :# 测试IP地址是否可用,时间为3秒
@@ -58,7 +59,7 @@ IP_list = [
 ]
 #http://bbs.1024v3.pw/pw/thread.php?fid=22&page=1
 def get_1024_links(page):
-    url = 'http://bbs.1024v3.pw/pw/thread.php?fid=5&page={}'.format(page)
+    url = 'http://bbs.1024v3.pw/pw/thread.php?fid=22&page={}'.format(page)
     url1 = 'http://bbs.1024v3.pw/pw/'   #'http://pics.dmm.co.jp/'#'http://bbs.1024v3.pw/pw/'
     wb_data = requests.get(url)
     wb_data.encoding = 'utf-8' # 不然会乱码，老司机探过这个雷
@@ -206,11 +207,11 @@ def get_torrent_headers():
             'Cache-Control':'max-age=0',
             'Connection':'keep-alive',
             'Content-Length':'36',
-            'Content-Type':'application/x-www-form-urlencoded',
-            'Cookie':'__cfduid=db364a512edc57151c9ba5af8a1bb1ced1494919719; a4184_pages=2; a4184_times=3',
-            'Host':'http://www3.uptorrentfilespacedownhostabc.rocks/',
-            'Origin':'http://www3.uptorrentfilespacedownhostabc.rocks/',
-            'Referer':'http://www3.uptorrentfilespacedownhostabc.rocks/',
+            'Content-Type':'application/x-www-form-urlencoded', 
+            'Cookie':'__cfduid=d0d1b066cafaea5ea318535b3f9f2b5d01494922236; a4184_pages=2; a4184_times=3',
+            'Host':'www3.uptorrentfilespacedownhostabc.rocks',
+             'Origin':'http://www3.uptorrentfilespacedownhostabc.rocks',
+            'Referer':'www3.uptorrentfilespacedownhostabc.rocks',
             'Upgrade-Insecure-Requests':'1',
             'User-Agent':random.choice(UserAgent_List),
     }

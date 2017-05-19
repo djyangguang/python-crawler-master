@@ -12,51 +12,48 @@ from wsgiref import headers
 from bs4 import BeautifulSoup
 import requests
 
-from proxytest import get_image_header, count_time, get_random_IP
+from proxytest import get_image_header
 
 
-def IP_Test(IP, URL_test, set_timeout=1)  :# 测试IP地址是否可用,时间为3秒
-    try:
-        requests.get(URL_test, headers=headers, proxies={'http': IP}, timeout=set_timeout)
-        return True
-    except:
-        return False
-
-
-def get_IP_test(num_IP=10):
-    IP_url = 'http://www.youdaili.net/Daili/http/19733.html' # 获取IP的网站
-    test_url = 'http://33img.com/' # 测试IP是否可用的的网站
-    wb_date = requests.get(IP_url, headers=headers)
-    wb_date.encoding = 'utf-8'
-    soup = BeautifulSoup(wb_date.text, 'lxml')
-    IP = soup.select('div.arc > div.content > p > span')
-    IP_list = []
-    for i in IP:
-        span_IP = i.get_text().encode('utf-8').split('@')[0]
-        print (span_IP)
-        if IP_Test(span_IP, test_url):  # 测试通过
-            IP_list.append(span_IP)
-            print ('测试通过，IP地址为 '+ str(span_IP))
-        if len(IP_list) > num_IP - 1:  # 搜集够N个IP地址就行了
-            print('搜集到' + str(len(IP_list)) + '个合格的IP地址')
-            return IP_list
-    return IP_list
-
+# from proxytest import get_image_header, count_time, get_random_IP
+# def IP_Test(IP, URL_test, set_timeout=1)  :# 测试IP地址是否可用,时间为3秒
+#     try:
+#         requests.get(URL_test, headers=headers, proxies={'http': IP}, timeout=set_timeout)
+#         return True
+#     except:
+#         return False
+# def get_IP_test(num_IP=10):
+#     IP_url = 'http://www.youdaili.net/Daili/http/19733.html' # 获取IP的网站
+#     test_url = 'http://33img.com/' # 测试IP是否可用的的网站
+#     wb_date = requests.get(IP_url, headers=headers)
+#     wb_date.encoding = 'utf-8'
+#     soup = BeautifulSoup(wb_date.text, 'lxml')
+#     IP = soup.select('div.arc > div.content > p > span')
+#     IP_list = []
+#     for i in IP:
+#         span_IP = i.get_text().encode('utf-8').split('@')[0]
+#         print (span_IP)
+#         if IP_Test(span_IP, test_url):  # 测试通过
+#             IP_list.append(span_IP)
+#             print ('测试通过，IP地址为 '+ str(span_IP))
+#         if len(IP_list) > num_IP - 1:  # 搜集够N个IP地址就行了
+#             print('搜集到' + str(len(IP_list)) + '个合格的IP地址')
+#             return IP_list
+#     return IP_list
 # for i in get_IP_test():
 #     print i
-
-IP_list = [
-    '58.221.75.7:8888',
-    '222.35.74.60:80',
-    '58.68.226.186:80',
-    '175.6.10.12:8888',
-    '58.221.75.145:8888',
-    '210.72.95.134:80',
-    '117.36.73.83:80',
-    '117.34.47.7:8888',
-    '123.234.8.210:8080'
-    
-]
+# IP_list = [
+#     '58.221.75.7:8888',
+#     '222.35.74.60:80',
+#     '58.68.226.186:80',
+#     '175.6.10.12:8888',
+#     '58.221.75.145:8888',
+#     '210.72.95.134:80',
+#     '117.36.73.83:80',
+#     '117.34.47.7:8888',
+#     '123.234.8.210:8080'
+#     
+# ]
 #http://bbs.1024v3.pw/pw/thread.php?fid=22&page=1
 def get_1024_links(page):
     url = 'http://bbs.1024v3.pw/pw/thread.php?fid=22&page={}'.format(page)
@@ -108,34 +105,34 @@ def get_1024_details(url): # 这里接收get_1024_links返回的link链接列表
 
 
 def download_single_image(image_url, proxy_flag=False, try_time=0): # 首先尝试直接下载，一次不成功则尝试使用代理
-    if not proxy_flag:#不使用代理
-        try:
+#     if not proxy_flag:#不使用代理
+#         try:
             image_html = requests.get(image_url, headers=get_image_header(), timeout=20)
             print('图片直接下载成功')
             time.sleep(1)
             return image_html #一次就成功下载！
-        except:
-            return download_single_image(image_url, proxy_flag=True)#否则调用自己，使用3次IP代理
-    else: # 使用代理时
-        if try_time < count_time:
-            try:
-                print('尝试第'+str(try_time+1)+'次使用代理下载')
-                # IP_address=get_random_IP()[0]
-                image_html = requests.get(image_url, headers=get_image_header(), proxies={'http': get_random_IP()}, timeout=20)
-                print ('状态码为'+str(image_html.status_code))
-                if image_html.status_code==200:
-                    print('图片通过IP代理处理成功！')
-                    return image_html  # 代理成功下载！
-                else:
-                    a= download_single_image(image_url, proxy_flag=True, try_time=(try_time + 1))
-                    return a
-            except:
-                print('IP代理下载失败')
-                a = download_single_image(image_url, proxy_flag=True, try_time=(try_time+1))  # 否则调用自己，使用3次IP代理
-                return a
-        else:
-            print ('图片未能下载' + image_url)
-            return None
+#         except:
+#             return download_single_image(image_url, proxy_flag=True)#否则调用自己，使用3次IP代理
+#     else: # 使用代理时
+#         if try_time < count_time:
+#             try:
+#                 print('尝试第'+str(try_time+1)+'次使用代理下载')
+#                 # IP_address=get_random_IP()[0]
+#                 image_html = requests.get(image_url, headers=get_image_header(), proxies={'http': get_random_IP()}, timeout=20)
+#                 print ('状态码为'+str(image_html.status_code))
+#                 if image_html.status_code==200:
+#                     print('图片通过IP代理处理成功！')
+#                     return image_html  # 代理成功下载！
+#                 else:
+#                     a= download_single_image(image_url, proxy_flag=True, try_time=(try_time + 1))
+#                     return a
+#             except:
+#                 print('IP代理下载失败')
+#                 a = download_single_image(image_url, proxy_flag=True, try_time=(try_time+1))  # 否则调用自己，使用3次IP代理
+#                 return a
+#         else:
+#             print ('图片未能下载' + image_url)
+#             return None
 def get_torrent(torrent_link, filename):
     #http://www3.uptorrentfilespacedownhostabc.cloud/updowm/file.php/OPHF62s.html
     torrent_download_url = 'http://www3.uptorrentfilespacedownhostabc.rocks/updowm/down.php'#http://www3.uptorrentfilespacedownhostabc.pink/updowm/down.php
@@ -150,11 +147,10 @@ def get_torrent(torrent_link, filename):
             # print data
     torrent = s.post(torrent_download_url, headers=get_torrent_headers(), data=data)
     with open(os.getcwd() + '//'+ filename+'//' + filename + '.torrent', 'ab') as f:#open(a_path+'.txt', 'w')# r只读，w可写，a追加
-        print('下载得到图片！保存图片'+str(filename)+'大小为'+str(len(torrent)))
-
+#         print('下载得到图片！保存图片'+str(filename)+'大小为'+str(len(torrent)))
         f.write(torrent.content)
 if __name__ == '__main__':
-    pool = Pool(processes=1)
+    pool = Pool(processes=1)    
     for i in range(2,3):
         print ('正在爬起第' + str(i) + '页')
         links = get_1024_links(i)
@@ -208,10 +204,10 @@ def get_torrent_headers():
             'Connection':'keep-alive',
             'Content-Length':'36',
             'Content-Type':'application/x-www-form-urlencoded', 
-            'Cookie':'__cfduid=d0d1b066cafaea5ea318535b3f9f2b5d01494922236; a4184_pages=2; a4184_times=3',
-            'Host':'www3.uptorrentfilespacedownhostabc.rocks',
-             'Origin':'http://www3.uptorrentfilespacedownhostabc.rocks',
-            'Referer':'www3.uptorrentfilespacedownhostabc.rocks',
+            'Cookie':'__cfduid=da1db3ca93a85468ddad109ef4edf69121494855775; a4184_pages=2; a4184_times=4',
+            'Host':'www3.uptorrentfilespacedownhostabc.club',
+             'Origin':'http://www3.uptorrentfilespacedownhostabc.club',
+            'Referer':'http://www3.uptorrentfilespacedownhostabc.club',
             'Upgrade-Insecure-Requests':'1',
             'User-Agent':random.choice(UserAgent_List),
     }

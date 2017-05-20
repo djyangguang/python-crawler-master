@@ -76,12 +76,13 @@ def get_image_header():#获取随机的header
 
 def download_single_image(image_url,proxy_flag=False,try_time=0):#首先尝试直接下载，一次不成功则尝试使用代理
 #     if not proxy_flag:#不使用代理
-#         try:
-    image_html = requests.get(image_url, headers=get_image_header(), timeout=20)
-    print('图片直接下载成功')
+    try:
+        image_html = requests.get(image_url, headers=get_image_header(), timeout=20)
+        print('图片直接下载成功')
         #time.sleep(3)
-    return image_html #一次就成功下载！
-#         except:
+        return image_html #一次就成功下载！
+    except:
+        print('超时！')
 #             return download_single_image(image_url, proxy_flag=True)#否则调用自己，使用3次IP代理
 #     else:#使用代理时
 #         if try_time<count_time:

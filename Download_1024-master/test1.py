@@ -20,7 +20,7 @@ def writerLog(Message):
     looger.setLevel(logging.INFO)
     looger.info(Message)
 file_path_youma='F:\caoliu\Python3'#'D:\MyProjectFile\Python\studyproject\Python3\StudyPro1'#存储的地址
-file_path_wuma='F:\caoliu\yousma'
+file_path_wuma='F:\caoliu\omei'
 headers = {'User-Agent':"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
             'Accept':"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             'Accept-Encoding':'gzip',
@@ -29,8 +29,8 @@ headers = {'User-Agent':"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (
 URL_1024='http://1024.stv919.pw/pw/thread.php?fid=22?fid=15&page=2' #22有
 #http://1024.stv919.pw/pw/thread.php?fid=14&page=7
 URL_youma ='http://1024.stv919.pw/pw/thread.php?fid=22&page=' #到了13页
-URL_wm ='http://1024.stv919.pw/pw/thread.php?fid=22&page=' #到了13页
-for num in range(1,111):      
+URL_wm ='http://1024.stv919.pw/pw/thread.php?fid=7&page=' #到了13页
+for num in range(4,111):      
     start_html = requests.get(URL_wm+str(num),  headers=headers)
     start_html.encoding='utf-8'
     bsObj = BeautifulSoup(start_html.text,'html.parser')

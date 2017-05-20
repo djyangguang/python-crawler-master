@@ -11,6 +11,7 @@ import requests
 from proxytest import download_single_image
 
 
+
 web_domain = 'http://t3.9laik.rocks/pw/'#这一部分加上子页面的href就是子页面的网址
 headers = {
 	'User-Agent': "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
@@ -58,7 +59,7 @@ torrent_headers = {
 #  'User-Agent':random.choice(UserAgent_List),
 
 def get_format_filename(input_filename): #文件夹的名字不能含有的特殊符号，windows下的限定
-	for s in ['?', '*', '<', '>', '\★', '！','～',':']:
+	for s in ['?', '*', '<', '>', '\★', '！','～',':','/','|']:
 		while s in input_filename:
 			input_filename = input_filename.strip().replace(s, '')
 	return input_filename
@@ -67,7 +68,8 @@ def get_inner_link(URL_part2, URL_part1=web_domain):  # 返回子页面的URL
 	return URL_part1 + URL_part2
 def get_torrent(torrent_link, filename):
     	#http://www3.uptorrentfilespacedownhostabc.cloud/updowm/file.php/OPHF62s.html
-    print('下载种子！')
+   
+  
     torrent_download_url = 'http://www3.uptorrentfilespacedownhostabc.com/updowm/down.php'#'http://www3.uptorrentfilespacedownhostabc.rocks/updowm/down.php'
 # 	torrent_download_url='http://www3.uptorrentfilespacedownhostabc.com/updowm/down.php'
     s = requests.Session()
@@ -89,7 +91,8 @@ def Process_SubPage(save_path, img_url):
 	start_html = requests.get(get_inner_link(img_url), headers=headers)#返回Response: <Response [200]>只要不是访问图片，一般都不会被封禁，不用换header和IP
 	start_html.encoding = 'utf-8'
 	bsObj = BeautifulSoup(start_html.text, 'html.parser') #取到网页数据
-	print('子页面读取完毕，开始尝试处理图片')
+# 	print('子页面读取完毕，开始尝试处理图片')
+	
 	urlList = []
 	#          if ('href' in a_img.attrs) and ('title' not in a_img.attrs ) :
 #          		print(a_img.attrs['href'])
@@ -125,7 +128,8 @@ def Process_SubPage(save_path, img_url):
 	
 	for a_img in bsObj.find("div", {"id": "read_tpc"}).findAll("img"):#处理图片
 		if ('src' in a_img.attrs):
-			print('图片URL为' + a_img.attrs['src'])
+# 			print('图片URL为' + a_img.attrs['src'])
+			
 			image = download_single_image(a_img.attrs['src'])
 			#time.sleep(0.3)#停止
 			

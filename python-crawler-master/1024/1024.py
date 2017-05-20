@@ -4,6 +4,7 @@
 1024导航网站http://1024bug.me/
 '''
 import datetime
+import logging
 import random
 import time
 import urllib.request, socket, re, sys, os
@@ -12,6 +13,8 @@ from wsgiref import headers
 from bs4 import BeautifulSoup
 from pip._vendor.colorama.ansi import Style
 import requests
+from email.message import Message
+from cgitb import handler
 
 
 num_IP=10
@@ -21,7 +24,8 @@ IP_test_timeout=1#测试IP时超过多少秒不响应就舍弃了
 baseUrl='http://bbs.1024v3.pw/pw/'
 #"F:\\xiezhen\\04" xiezhen
 #"F:\\xiezhen\\zipai\\01" xiezhen
-targetPath = "F:\\xiezhen\\zipai\\01" 
+targetPath = "F:\\xiezhen\\zipai\\05"  #louchu
+#targetPath = "F:\\xiezhen\\zipai\\05"  #zipai 
 headers = {'User-Agent':"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
             'Accept':"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             'Accept-Encoding':'gzip',
@@ -125,13 +129,15 @@ def downImg(data,filePath,x):
                 now = datetime.datetime.now()
                 now.strftime('%Y-%m-%d %H:%M:%S')  
                 f = open(x+str(img_ind) + '.jpg', 'ab')
-#                 print(now.strftime('%Y-%m-%d %H:%M:%S')+"========>" +link+"["+str(img_ind)+"]"+'大小为'+str(len(image.content)))         
+                print(now.strftime('%Y-%m-%d %H:%M:%S')+"========>" +link+"["+str(img_ind)+"]"+'大小为'+str(len(image.content)))   
+                writerLog(now.strftime('%Y-%m-%d %H:%M:%S')+"========>" +link+"["+str(img_ind)+"]"+'大小为'+str(len(image.content)))
+                     
                 f.write(image.content)
                 f.close()
             img_ind += 1 
         except:
             img_ind += 1 
-            print('失败')
+            print(now.strftime('%Y-%m-%d %H:%M:%S')+"========>"'失败'+link)
 def IP_Test(IP,URL_test,set_timeout=IP_test_timeout):#测试IP地址是否可用,时间为3秒
     try:
         requests.get(URL_test, headers=headers, proxies={'http': IP[0] }, timeout=set_timeout)
@@ -254,14 +260,25 @@ def get_format_filename(input_filename): #文件夹的名字不能含有的特�
         while s in input_filename:
             input_filename = input_filename.strip().replace(s, '')
     return input_filename
+
+def writerLog(Message):
+    looger=logging.getLogger()
+    filename =time.strftime('%Y-%m-%d',time.localtime(time.time()))
+    handler=logging.FileHandler("F:\\xiezhen\\"+filename+".info")
+    looger.addHandler(handler)
+#     looger.setLevel(logging.)
+    looger.info(Message)
+     
 #URL = baseUrl+'thread0806.php?fid=16&search=&page=' xiezhen 忍野忍 6页 http://1024.stv919.pw/pw/thread.php?fid=14&page=
 #URL = baseUrl+'thread0806.php?fid=16&search=&page=' zipai  http://1024.stv919.pw/pw/thread.php?fid=15
 #http://1024.97luhi.me/pw/thread.php?fid=15&page= http://1024.stv919.pw/pw/thread.php?fid=15
-URL ='http://1024.stv919.pw/pw/thread.php?fid=15&page='
+#URL ='http://1024.stv919.pw/pw/thread.php?fid=15&page=47'  #zipai
+URL ='http://1024.stv919.pw/pw/thread.php?fid=16&page='  #zipai
 for num in range(1,1111):
 #     print("#######################################")
 #     print("##########总目录下载地址#############################")
     print("=====================>"+URL+str(num))
+    writerLog(URL+str(num))
 #     print("#######################################")
 #     print("#######################################")
     UrlList = getUrl(URL+str(num)) 
